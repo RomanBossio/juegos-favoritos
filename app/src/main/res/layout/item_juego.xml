@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="8dp">
+
+    <!-- Imagen del juego -->
+    <ImageView
+        android:id="@+id/ivJuego"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_launcher_foreground"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Nombre del juego -->
+    <TextView
+        android:id="@+id/tvNombreJuego"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nombre del juego"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@id/ivJuego"
+        app:layout_constraintStart_toEndOf="@id/ivJuego"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp" />
+
+    <!-- Descripción del juego -->
+    <TextView
+        android:id="@+id/tvDescripcionJuego"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Descripción breve"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tvNombreJuego"
+        app:layout_constraintStart_toStartOf="@id/tvNombreJuego"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

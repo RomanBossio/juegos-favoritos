@@ -13,6 +13,9 @@
         android:theme="@style/Theme.JuegosFavoritosApp"
         tools:targetApi="31">
         <activity
+            android:name=".AgregarJuegoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListaJuegosActivity"
             android:exported="false" />
         <activity
