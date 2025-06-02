@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Fondo blanco y moderno -->
+    <color name="fondo_moderno">#FFFFFF</color>
+
+    <!-- Color de acento negro para botones -->
+    <color name="colorAccent">#000000</color>
 </resources>
+
+
