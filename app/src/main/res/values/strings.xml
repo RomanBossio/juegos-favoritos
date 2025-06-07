@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JuegosFavoritosApp</string>
+    <string name="marcar_como_favorito">Marcar como favorito</string>
 </resources>
