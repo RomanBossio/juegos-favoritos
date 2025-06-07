@@ -48,5 +48,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Categoría del juego (nuevo) -->
+    <TextView
+        android:id="@+id/tvCategoriaJuego"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Categoría: Aventura"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tvDescripcionJuego"
+        app:layout_constraintStart_toStartOf="@id/tvDescripcionJuego"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp" />
 
+</androidx.constraintlayout.widget.ConstraintLayout>

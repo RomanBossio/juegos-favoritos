@@ -19,13 +19,12 @@ class ListaJuegosActivity : AppCompatActivity() {
     private lateinit var adapter: JuegoAdapter
 
     private val juegos = mutableListOf(
-        Juego("FIFA 24", "Juego de fútbol", null),
-        Juego("Fortnite", "Battle royale popular", null),
-        Juego("Minecraft", "Construcción y aventuras", null),
-        Juego("The Witcher 3", "Rol y mundo abierto", null)
+        Juego("FIFA 24", "Juego de fútbol", null, "Deportes"),
+        Juego("Fortnite", "Battle royale popular", null, "Acción"),
+        Juego("Minecraft", "Construcción y aventuras", null, "Aventura"),
+        Juego("The Witcher 3", "Rol y mundo abierto", null, "Rol")
     )
 
-    // Guardar la posición del juego que se está editando
     private var posicionEditando: Int? = null
     private var nuevaImagenUri: Uri? = null
 
@@ -73,23 +72,21 @@ class ListaJuegosActivity : AppCompatActivity() {
         val etNuevoNombre = dialogView.findViewById<EditText>(R.id.etNuevoNombre)
         val etNuevaDescripcion = dialogView.findViewById<EditText>(R.id.etNuevaDescripcion)
         val ivNuevaImagen = dialogView.findViewById<ImageView>(R.id.ivNuevaImagen)
+        val etNuevaCategoria = dialogView.findViewById<EditText>(R.id.etNuevaCategoria) // NUEVO
 
-        // Prellenar los campos con los datos actuales
         etNuevoNombre.setText(juego.nombre)
         etNuevaDescripcion.setText(juego.descripcion)
+        etNuevaCategoria.setText(juego.categoria) // NUEVO
 
-        // Mostrar la imagen actual (o por defecto si no tiene)
         if (juego.imagenUri != null) {
             ivNuevaImagen.setImageURI(Uri.parse(juego.imagenUri))
         } else {
             ivNuevaImagen.setImageResource(R.drawable.ic_juego_generico)
         }
 
-        // Guardar la posición y la imagen actual (por si elige una nueva)
         posicionEditando = position
-        nuevaImagenUri = if (juego.imagenUri != null) Uri.parse(juego.imagenUri) else null
+        nuevaImagenUri = juego.imagenUri?.let { Uri.parse(it) }
 
-        // Click para elegir nueva imagen
         ivNuevaImagen.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -102,13 +99,14 @@ class ListaJuegosActivity : AppCompatActivity() {
         builder.setPositiveButton("Guardar") { _, _ ->
             val nuevoNombre = etNuevoNombre.text.toString().trim()
             val nuevaDescripcion = etNuevaDescripcion.text.toString().trim()
+            val nuevaCategoria = etNuevaCategoria.text.toString().trim() // NUEVO
 
-            if (nuevoNombre.isNotEmpty() && nuevaDescripcion.isNotEmpty()) {
-                // Actualizar el juego con los datos nuevos y la nueva imagen
+            if (nuevoNombre.isNotEmpty() && nuevaDescripcion.isNotEmpty() && nuevaCategoria.isNotEmpty()) {
                 val juegoActualizado = Juego(
                     nuevoNombre,
                     nuevaDescripcion,
-                    nuevaImagenUri?.toString()
+                    nuevaImagenUri?.toString(),
+                    nuevaCategoria // NUEVO
                 )
                 juegos[position] = juegoActualizado
                 adapter.notifyItemChanged(position)
@@ -124,17 +122,17 @@ class ListaJuegosActivity : AppCompatActivity() {
         if (requestCode == 100 && resultCode == RESULT_OK) {
             val nombre = data?.getStringExtra("nombre")
             val descripcion = data?.getStringExtra("descripcion")
+            val categoria = data?.getStringExtra("categoria") // NUEVO
             val imagenUriString = data?.getStringExtra("imagenUri")
 
-            if (!nombre.isNullOrEmpty() && !descripcion.isNullOrEmpty()) {
-                val nuevoJuego = Juego(nombre, descripcion, imagenUriString)
+            if (!nombre.isNullOrEmpty() && !descripcion.isNullOrEmpty() && !categoria.isNullOrEmpty()) {
+                val nuevoJuego = Juego(nombre, descripcion, imagenUriString, categoria)
                 juegos.add(nuevoJuego)
                 adapter.notifyItemInserted(juegos.size - 1)
             }
         }
 
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            // Imagen seleccionada para el juego que se está editando
             nuevaImagenUri = data?.data
         }
     }
