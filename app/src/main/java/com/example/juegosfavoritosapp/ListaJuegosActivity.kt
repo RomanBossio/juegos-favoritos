@@ -21,10 +21,10 @@ class ListaJuegosActivity : AppCompatActivity() {
     private lateinit var adapter: JuegoAdapter
 
     private val juegos = mutableListOf(
-        Juego("FIFA 24", "Juego de fútbol", null, "Deportes"),
-        Juego("Fortnite", "Battle royale popular", null, "Acción"),
-        Juego("Minecraft", "Construcción y aventuras", null, "Aventura"),
-        Juego("The Witcher 3", "Rol y mundo abierto", null, "Rol")
+        Juego("FIFA 24", "Juego de fútbol", "android.resource://${packageName}/drawable/fifa24, "Deportes"),
+        Juego("Fortnite", "Battle royale popular", "android.resource://${packageName}/drawable/fornite, "Acción"),
+        Juego("Minecraft", "Construcción y aventuras", "android.resource://${packageName}/drawable/minecraft, "Aventura"),
+        Juego("The Witcher 3", "Rol y mundo abierto", "android.resource://${packageName}/drawable/witcher3, "Rol")
     )
 
     // Lista para la búsqueda
