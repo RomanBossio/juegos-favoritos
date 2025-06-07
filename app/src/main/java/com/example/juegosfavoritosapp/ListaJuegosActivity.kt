@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,6 +17,7 @@ class ListaJuegosActivity : AppCompatActivity() {
 
     private lateinit var rvJuegos: RecyclerView
     private lateinit var btnAgregar: Button
+    private lateinit var svBuscar: SearchView // NUEVO: el SearchView
     private lateinit var adapter: JuegoAdapter
 
     private val juegos = mutableListOf(
@@ -24,6 +26,9 @@ class ListaJuegosActivity : AppCompatActivity() {
         Juego("Minecraft", "Construcción y aventuras", null, "Aventura"),
         Juego("The Witcher 3", "Rol y mundo abierto", null, "Rol")
     )
+
+    // Lista para la búsqueda
+    private val juegosFiltrados = mutableListOf<Juego>()
 
     private var posicionEditando: Int? = null
     private var nuevaImagenUri: Uri? = null
@@ -34,8 +39,12 @@ class ListaJuegosActivity : AppCompatActivity() {
 
         rvJuegos = findViewById(R.id.rvJuegos)
         btnAgregar = findViewById(R.id.btnAgregar)
+        svBuscar = findViewById(R.id.svBuscar)
 
-        adapter = JuegoAdapter(juegos) { position ->
+        // Inicialmente, mostrar todos los juegos
+        juegosFiltrados.addAll(juegos)
+
+        adapter = JuegoAdapter(juegosFiltrados) { position ->
             mostrarDialogoOpciones(position)
         }
 
@@ -46,6 +55,35 @@ class ListaJuegosActivity : AppCompatActivity() {
             val intent = Intent(this, AgregarJuegoActivity::class.java)
             startActivityForResult(intent, 100)
         }
+
+        // Configurar la búsqueda
+        svBuscar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false // No hacemos nada al darle "Enter"
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filtrarJuegos(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filtrarJuegos(query: String?) {
+        val texto = query?.lowercase() ?: ""
+        juegosFiltrados.clear()
+        if (texto.isEmpty()) {
+            juegosFiltrados.addAll(juegos)
+        } else {
+            juegosFiltrados.addAll(
+                juegos.filter {
+                    it.nombre.lowercase().contains(texto) ||
+                            it.descripcion.lowercase().contains(texto) ||
+                            it.categoria.lowercase().contains(texto)
+                }
+            )
+        }
+        adapter.notifyDataSetChanged()
     }
 
     private fun mostrarDialogoOpciones(position: Int) {
@@ -62,21 +100,24 @@ class ListaJuegosActivity : AppCompatActivity() {
     }
 
     private fun eliminarJuego(position: Int) {
-        juegos.removeAt(position)
+        // Eliminar el juego también de la lista original
+        val juegoAEliminar = juegosFiltrados[position]
+        juegos.remove(juegoAEliminar)
+        juegosFiltrados.removeAt(position)
         adapter.notifyItemRemoved(position)
     }
 
     private fun mostrarDialogoModificarJuego(position: Int) {
-        val juego = juegos[position]
+        val juego = juegosFiltrados[position]
         val dialogView = layoutInflater.inflate(R.layout.dialog_modificar_juego, null)
         val etNuevoNombre = dialogView.findViewById<EditText>(R.id.etNuevoNombre)
         val etNuevaDescripcion = dialogView.findViewById<EditText>(R.id.etNuevaDescripcion)
         val ivNuevaImagen = dialogView.findViewById<ImageView>(R.id.ivNuevaImagen)
-        val etNuevaCategoria = dialogView.findViewById<EditText>(R.id.etNuevaCategoria) // NUEVO
+        val etNuevaCategoria = dialogView.findViewById<EditText>(R.id.etNuevaCategoria)
 
         etNuevoNombre.setText(juego.nombre)
         etNuevaDescripcion.setText(juego.descripcion)
-        etNuevaCategoria.setText(juego.categoria) // NUEVO
+        etNuevaCategoria.setText(juego.categoria)
 
         if (juego.imagenUri != null) {
             ivNuevaImagen.setImageURI(Uri.parse(juego.imagenUri))
@@ -84,7 +125,7 @@ class ListaJuegosActivity : AppCompatActivity() {
             ivNuevaImagen.setImageResource(R.drawable.ic_juego_generico)
         }
 
-        posicionEditando = position
+        posicionEditando = juegos.indexOf(juego)
         nuevaImagenUri = juego.imagenUri?.let { Uri.parse(it) }
 
         ivNuevaImagen.setOnClickListener {
@@ -99,16 +140,21 @@ class ListaJuegosActivity : AppCompatActivity() {
         builder.setPositiveButton("Guardar") { _, _ ->
             val nuevoNombre = etNuevoNombre.text.toString().trim()
             val nuevaDescripcion = etNuevaDescripcion.text.toString().trim()
-            val nuevaCategoria = etNuevaCategoria.text.toString().trim() // NUEVO
+            val nuevaCategoria = etNuevaCategoria.text.toString().trim()
 
             if (nuevoNombre.isNotEmpty() && nuevaDescripcion.isNotEmpty() && nuevaCategoria.isNotEmpty()) {
                 val juegoActualizado = Juego(
                     nuevoNombre,
                     nuevaDescripcion,
                     nuevaImagenUri?.toString(),
-                    nuevaCategoria // NUEVO
+                    nuevaCategoria
                 )
-                juegos[position] = juegoActualizado
+                // Actualizar en la lista original
+                posicionEditando?.let {
+                    juegos[it] = juegoActualizado
+                }
+                // Actualizar en la lista filtrada
+                juegosFiltrados[position] = juegoActualizado
                 adapter.notifyItemChanged(position)
             }
         }
@@ -122,13 +168,14 @@ class ListaJuegosActivity : AppCompatActivity() {
         if (requestCode == 100 && resultCode == RESULT_OK) {
             val nombre = data?.getStringExtra("nombre")
             val descripcion = data?.getStringExtra("descripcion")
-            val categoria = data?.getStringExtra("categoria") // NUEVO
+            val categoria = data?.getStringExtra("categoria")
             val imagenUriString = data?.getStringExtra("imagenUri")
 
             if (!nombre.isNullOrEmpty() && !descripcion.isNullOrEmpty() && !categoria.isNullOrEmpty()) {
                 val nuevoJuego = Juego(nombre, descripcion, imagenUriString, categoria)
                 juegos.add(nuevoJuego)
-                adapter.notifyItemInserted(juegos.size - 1)
+                juegosFiltrados.add(nuevoJuego)
+                adapter.notifyItemInserted(juegosFiltrados.size - 1)
             }
         }
 
