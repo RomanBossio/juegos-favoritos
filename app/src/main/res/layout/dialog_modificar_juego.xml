@@ -2,36 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- EditText para el nuevo nombre -->
     <EditText
         android:id="@+id/etNuevoNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
         android:hint="Nuevo nombre del juego"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:backgroundTint="@color/black"
-        android:padding="12dp" />
+        android:minHeight="48dp" />
 
-    <!-- EditText para la nueva descripción -->
     <EditText
         android:id="@+id/etNuevaDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
         android:hint="Nueva descripción"
         android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:backgroundTint="@color/black"
-        android:padding="12dp" />
+        android:minHeight="48dp" />
 
-    <!-- Imagen para la nueva foto -->
+    <!-- NUEVO: campo para nueva categoría -->
+    <EditText
+        android:id="@+id/etNuevaCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nueva categoría"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp" />
+
+    <!-- NUEVO: ImageView para elegir imagen -->
     <ImageView
         android:id="@+id/ivNuevaImagen"
         android:layout_width="120dp"
@@ -39,7 +37,6 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_juego_generico"
         android:scaleType="centerCrop"
-        android:contentDescription="Imagen del juego"
-        android:background="@drawable/rounded_background" />
+        android:contentDescription="Imagen del juego" />
 
 </LinearLayout>

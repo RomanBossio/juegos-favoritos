@@ -9,11 +9,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class AgregarJuegoActivity : AppCompatActivity() {
 
     private lateinit var etNombreJuego: EditText
     private lateinit var etDescripcionJuego: EditText
+    private lateinit var etCategoriaJuego: EditText
     private lateinit var btnGuardarJuego: Button
     private lateinit var ivImagenJuego: ImageView
 
@@ -23,9 +25,16 @@ class AgregarJuegoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_agregar_juego)
 
+        // Configurar Toolbar como ActionBar para que aparezca la flecha
+        val myToolbar: Toolbar = findViewById(R.id.myToolbar)
+        setSupportActionBar(myToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Agregar Juego"
+
         // Inicializar vistas
         etNombreJuego = findViewById(R.id.etNombreJuego)
         etDescripcionJuego = findViewById(R.id.etDescripcionJuego)
+        etCategoriaJuego = findViewById(R.id.etCategoriaJuego)
         btnGuardarJuego = findViewById(R.id.btnGuardarJuego)
         ivImagenJuego = findViewById(R.id.ivImagenJuego)
 
@@ -33,21 +42,23 @@ class AgregarJuegoActivity : AppCompatActivity() {
         ivImagenJuego.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, 200) // 200 es el requestCode para la galería
+            startActivityForResult(intent, 200)
         }
 
         // Acción del botón para guardar el juego
         btnGuardarJuego.setOnClickListener {
             val nombre = etNombreJuego.text.toString().trim()
             val descripcion = etDescripcionJuego.text.toString().trim()
+            val categoria = etCategoriaJuego.text.toString().trim()
 
-            if (nombre.isEmpty() || descripcion.isEmpty()) {
+            if (nombre.isEmpty() || descripcion.isEmpty() || categoria.isEmpty()) {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
             } else {
                 val resultIntent = Intent()
                 resultIntent.putExtra("nombre", nombre)
                 resultIntent.putExtra("descripcion", descripcion)
-                resultIntent.putExtra("imagenUri", imagenUri?.toString()) // Guardar la URI como String
+                resultIntent.putExtra("categoria", categoria)
+                resultIntent.putExtra("imagenUri", imagenUri?.toString())
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
@@ -59,7 +70,13 @@ class AgregarJuegoActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             imagenUri = data?.data
-            ivImagenJuego.setImageURI(imagenUri) // Mostrar la imagen elegida
+            ivImagenJuego.setImageURI(imagenUri)
         }
+    }
+
+    // Manejar el evento de la flecha atrás
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
