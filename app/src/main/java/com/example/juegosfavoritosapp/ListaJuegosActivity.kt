@@ -21,9 +21,9 @@ class ListaJuegosActivity : AppCompatActivity() {
     private lateinit var adapter: JuegoAdapter
 
     private val juegos = mutableListOf(
-        Juego("FIFA 24", "Juego de fútbol", null, "Deportes"),
-        Juego("Fortnite", "Battle royale popular", null, "Acción"),
-        Juego("Minecraft", "Construcción y aventuras", null, "Aventura"),
+        Juego("FIFA 24", "Juego de fútbol", R.drawable.fifa24.toString(), "Deportes"),
+        Juego("Fortnite", "Battle royale popular", R.drawable.fortnite.toString(), "Acción"),
+        Juego("Minecraft", "Construcción y aventuras", R.drawable.minecraft.toString(), "Aventura"),
         Juego("The Witcher 3", "Rol y mundo abierto", null, "Rol")
     )
 
