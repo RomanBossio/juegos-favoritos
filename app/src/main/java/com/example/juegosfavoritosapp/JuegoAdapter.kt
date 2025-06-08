@@ -10,16 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 
 class JuegoAdapter(
     private val juegos: List<Juego>,
-    private val onItemClick: (position: Int) -> Unit // Nuevo parámetro: función lambda para el click
+    private val onItemClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<JuegoAdapter.JuegoViewHolder>() {
 
     inner class JuegoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivJuego: ImageView = itemView.findViewById(R.id.ivJuego)
         val tvNombreJuego: TextView = itemView.findViewById(R.id.tvNombreJuego)
         val tvDescripcionJuego: TextView = itemView.findViewById(R.id.tvDescripcionJuego)
+        val tvCategoriaJuego: TextView = itemView.findViewById(R.id.tvCategoriaJuego)
+        val ivFavorito: ImageView = itemView.findViewById(R.id.ivFavorito) // NUEVO: icono favorito
 
         init {
-            // Detectar el click en todo el ítem y avisar a la Activity
             itemView.setOnClickListener {
                 onItemClick(adapterPosition)
             }
@@ -42,8 +43,21 @@ class JuegoAdapter(
 
         holder.tvNombreJuego.text = juego.nombre
         holder.tvDescripcionJuego.text = juego.descripcion
+        holder.tvCategoriaJuego.text = "Categoría: ${juego.categoria}"
+
+        // Mostrar icono correcto de favorito
+        if (juego.esFavorito) {
+            holder.ivFavorito.setImageResource(R.drawable.ic_favorite_border)
+        } else {
+            holder.ivFavorito.setImageResource(R.drawable.ic_favorite_filled)
+        }
+
+        // Click en la estrella para alternar favorito
+        holder.ivFavorito.setOnClickListener {
+            juego.esFavorito = !juego.esFavorito
+            notifyItemChanged(position)
+        }
     }
 
     override fun getItemCount(): Int = juegos.size
 }
-

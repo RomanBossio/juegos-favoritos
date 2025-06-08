@@ -48,5 +48,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Categoría del juego (nuevo) -->
+    <TextView
+        android:id="@+id/tvCategoriaJuego"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Categoría: Aventura"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tvDescripcionJuego"
+        app:layout_constraintStart_toStartOf="@id/tvDescripcionJuego"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp" />
 
+    <ImageView
+        android:id="@+id/ivFavorito"
+        android:layout_width="25dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:contentDescription="@string/marcar_como_favorito"
+        android:focusable="true"
+        android:src="@drawable/ic_favorite_filled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
